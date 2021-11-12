@@ -1,0 +1,6 @@
+package com.br.matheus.todolist.model;
+
+public enum StatusTarefa {
+	// CRIANDO ENUMERAÇÃO DOS STATUS POSSIVEIS DA TAREFA, TEM QUE SER TUDO MAIÚSCULO E COM AS REGRAS DE VARIÁVEIS
+	ABERTA, CONCLUIDA, ADIADA
+}
