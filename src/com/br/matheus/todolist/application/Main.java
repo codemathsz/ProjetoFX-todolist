@@ -12,9 +12,11 @@ public class Main extends Application {
 	public void start(Stage primaryStage) {
 		try {
 			AnchorPane root = (AnchorPane)FXMLLoader.load(getClass().getResource("../view/Index.fxml"));
-			Scene scene = new Scene(root,457,550);
+			Scene scene = new Scene(root,490,550);
 			scene.getStylesheets().add(getClass().getResource("../view/application.css").toExternalForm());
 			primaryStage.setScene(scene);
+			primaryStage.setResizable(false);//IMPEDIR QUE A JANELA  REDIMENCIONE
+			primaryStage.setTitle("To do List");//TITULO DA JANELA
 			primaryStage.show();
 		} catch(Exception e) {
 			e.printStackTrace();
