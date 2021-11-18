@@ -2,6 +2,7 @@
 
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
@@ -130,5 +131,11 @@
             </ImageView>
          </graphic>
       </Button>
+      <ChoiceBox fx:id="choiceImportancia" layoutX="189.0" layoutY="179.0" prefWidth="150.0" />
+      <Label layoutX="191.0" layoutY="144.0" text="Nível de Importância:" textFill="WHITE">
+         <font>
+            <Font name="Sitka Text Bold" size="14.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

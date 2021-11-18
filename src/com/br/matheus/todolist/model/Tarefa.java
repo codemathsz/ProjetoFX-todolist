@@ -14,7 +14,7 @@ public class Tarefa {
 	private String classifImportancia;
 	
 	
-	
+	// GETs E SETs
 	public long getId() {
 		return id;
 	}

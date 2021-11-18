@@ -1,5 +1,7 @@
 package com.br.matheus.todolist.application;
 	
+import com.br.matheus.todolist.io.TarefaIO;
+
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
@@ -11,6 +13,7 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
+			TarefaIO.createFile();
 			AnchorPane root = (AnchorPane)FXMLLoader.load(getClass().getResource("../view/Index.fxml"));
 			Scene scene = new Scene(root,490,550);
 			scene.getStylesheets().add(getClass().getResource("../view/application.css").toExternalForm());
