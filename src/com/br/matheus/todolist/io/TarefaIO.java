@@ -1,9 +1,14 @@
 package com.br.matheus.todolist.io;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Scanner;
 
 import com.br.matheus.todolist.model.Tarefa;
@@ -59,6 +64,17 @@ public class TarefaIO {
 										   //  writer = new FileWrite(arqIds);
 										  //   writer.write(proxId+"");	
 		writer.close();
+		
+		
+	}
+	// CRIANDO O MÉTODO QUE LER AS TAREFAS			"MANDANDO O ERRO PRA CIMA"
+	public static List<Tarefa> readTarefas() throws FileNotFoundException{// List <"TEM QUE SER DE UMA CLASSE, E PARA USAR OS TIPOS PRIMITIVOS TEM QUE CHAMAR A CLASSE QUE FORAM CRIADOS PARA ELES EX: INT= Integer">
+		
+		File arqTarefas = new File(FILE_TAREFA);
+		List<Tarefa> tarefas = new ArrayList<>();// É OPCIONAL COLOCAR Array< AQUI!> O <Tarefa>  POR QUE JÁ ESTÁ NO List
+		FileReader reader = new  FileReader(arqTarefas);// FileReader NÃO LÊ UMA LINHA INTEIRA, É LIMITADO
+		BufferedReader buff = new BufferedReader(reader);// O BufferedReader CONSEGUE LER O ARQUIVO
+		return null;
 	}
 }
 
