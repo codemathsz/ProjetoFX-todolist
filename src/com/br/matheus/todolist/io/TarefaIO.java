@@ -1,7 +1,12 @@
 package com.br.matheus.todolist.io;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Scanner;
+
+import com.br.matheus.todolist.model.Tarefa;
 
 public class TarefaIO {
 	// static POR CAUSA DOS METODOS QUE SÃO static E FINAL POIS NÃO VARIA, É CONSTANTE
@@ -33,5 +38,31 @@ public class TarefaIO {
 		} catch (Exception e) {
 			e.printStackTrace();// IMPRIMIR O ERRO NO CONSOLE, E COM O JOptionPane NÃO SERIA O CORRETO POIS ESSA CLASSE NÃO DEVE TER CONTATO COM A JANELA
 		}
+	}									// throws MANDA PARA "CIMA" O TIPO DE EXCEPTION
+	public static void insert(Tarefa tarefa) throws FileNotFoundException ,IOException {
+		File arqTarefas = new File(FILE_TAREFA);
+		File arqIDs = new File(FILE_IDS);
+		
+		// LER O ÚLTIMO ID NO FILE_IDS
+		Scanner leitor = new Scanner(arqIDs);// USAMOS THOROWS(MANDAR O ERRO PARA QUEM CHAMOU, REPASSANDO UMA EXCEPTION) POE QUE ESTAMOS MEXENDO COM ARQUIVO E O JAVA NÃO DAIXA EXECUTAR SEM UM TRY CATCH OU THROWS
+		tarefa.setId(leitor.nextLong());
+		leitor.close();
+		// GRAVA A TAREFA NO ARQUIVO
+		FileWriter writer = new FileWriter(arqTarefas, true);
+		writer.append(tarefa.formatToSave());//ESCREVENDO/SALVANDO O AQUIVO,A TAREFA
+		writer.close();
+		// GRAVA O NOVO "PRÓXIMO ID" NO ARQUIVO DE  IDS
+		writer = new FileWriter(arqIDs);
+		writer.write((tarefa.getId()+1)+"");// CONCATENANDO A STRING, PARA VIRAR UMA STRING, POIS SE COLOCASSE O INT ELE IRIA ASSOCIAR A TABELA ASCII
+											 // OUTRO JEITO DE FAZER
+											// Long proxId = tarefa.getId() + 1;
+										   //  writer = new FileWrite(arqIds);
+										  //   writer.write(proxId+"");	
+		writer.close();
 	}
 }
+
+
+
+
+
