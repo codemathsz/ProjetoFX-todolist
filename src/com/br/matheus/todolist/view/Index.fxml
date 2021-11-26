@@ -8,6 +8,8 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
@@ -15,7 +17,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="550.0" prefWidth="490.0" style="-fx-background-radius: 20px; -fx-background-color: #079;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.br.matheus.todolist.controller.IndexController">
+<AnchorPane prefHeight="550.0" prefWidth="943.0" style="-fx-background-radius: 20px; -fx-background-color: #079;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.br.matheus.todolist.controller.IndexController">
    <children>
       <MenuBar fx:id="menu" layoutX="106.0" layoutY="14.0" prefWidth="500.0" style="-fx-background-radius: 10px;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <menus>
@@ -51,7 +53,7 @@
          </font></Label>
       <TextField fx:id="boxNameTf" layoutX="15.0" layoutY="179.0" promptText="Digitar..." AnchorPane.leftAnchor="15.0" />
       <TextField fx:id="statusTf" disable="true" layoutX="15.0" layoutY="259.0" style="-fx-background-color: lightgray;" AnchorPane.leftAnchor="15.0" />
-      <TextArea fx:id="boxComent" layoutX="21.0" layoutY="348.0" prefHeight="113.0" prefWidth="261.0" promptText="Digitar..." AnchorPane.leftAnchor="15.0" />
+      <TextArea fx:id="boxComent" layoutX="21.0" layoutY="348.0" prefHeight="113.0" prefWidth="390.0" promptText="Digitar..." AnchorPane.leftAnchor="15.0" />
       <Label layoutX="15.0" layoutY="316.0" prefHeight="18.0" prefWidth="114.0" text="Comentários:" textFill="#fff8f8" AnchorPane.leftAnchor="15.0">
          <font>
             <Font name="Sitka Text Bold" size="15.0" />
@@ -71,7 +73,7 @@
             </ImageView>
          </graphic>
       </Button>
-      <Button fx:id="btnList" layoutX="90.0" layoutY="483.0" mnemonicParsing="false" onAction="#btnListClick" prefHeight="50.0" prefWidth="69.0" style="-fx-background-radius: 18px; -fx-background-color: #0388a6;">
+      <Button fx:id="btnList" disable="true" layoutX="90.0" layoutY="483.0" mnemonicParsing="false" onAction="#btnListClick" prefHeight="50.0" prefWidth="69.0" style="-fx-background-radius: 18px; -fx-background-color: #0388a6;">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
@@ -86,7 +88,7 @@
             </ImageView>
          </graphic>
       </Button>
-      <Button fx:id="btnCalendar" layoutX="164.0" layoutY="483.0" mnemonicParsing="false" onAction="#btnCalendarClick" prefHeight="50.0" prefWidth="69.0" style="-fx-background-radius: 18px; -fx-background-color: #0388a6;">
+      <Button fx:id="btnCalendar" disable="true" layoutX="164.0" layoutY="483.0" mnemonicParsing="false" onAction="#btnCalendarClick" prefHeight="50.0" prefWidth="69.0" style="-fx-background-radius: 18px; -fx-background-color: #0388a6;">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
@@ -101,7 +103,7 @@
             </ImageView>
          </graphic>
       </Button>
-      <Button fx:id="btnClean" layoutX="393.0" layoutY="483.0" mnemonicParsing="false" onAction="#btnCleanClick" prefHeight="50.0" prefWidth="69.0" style="-fx-background-radius: 18px; -fx-background-color: #0388a6;">
+      <Button fx:id="btnClean" layoutX="335.0" layoutY="483.0" mnemonicParsing="false" onAction="#btnCleanClick" prefHeight="50.0" prefWidth="69.0" style="-fx-background-radius: 18px; -fx-background-color: #0388a6;">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
@@ -116,7 +118,7 @@
             </ImageView>
          </graphic>
       </Button>
-      <Button fx:id="btnDump" layoutX="242.0" layoutY="483.0" mnemonicParsing="false" onAction="#btnDumpClick" prefHeight="50.0" prefWidth="69.0" style="-fx-background-radius: 18px; -fx-background-color: #0388a6;">
+      <Button fx:id="btnDump" disable="true" layoutX="242.0" layoutY="483.0" mnemonicParsing="false" onAction="#btnDumpClick" prefHeight="50.0" prefWidth="69.0" style="-fx-background-radius: 18px; -fx-background-color: #0388a6;">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
@@ -137,5 +139,13 @@
             <Font name="Sitka Text Bold" size="14.0" />
          </font>
       </Label>
+      <TableView fx:id="tvTarefa" layoutX="421.0" layoutY="38.0" prefHeight="423.0" prefWidth="515.0" AnchorPane.bottomAnchor="89.0" AnchorPane.leftAnchor="413.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="38.0">
+        <columns>
+          <TableColumn fx:id="tcData" maxWidth="105.0" minWidth="105.0" prefWidth="105.0" text="DATA" />
+          <TableColumn fx:id="tcTarefa" maxWidth="222.0" minWidth="222.0" prefWidth="222.0" text="Tarefa" />
+            <TableColumn fx:id="tcStatus" maxWidth="86.0" minWidth="86.0" prefWidth="86.0" text="Status" />
+            <TableColumn fx:id="tcImportancia" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" text="Importância" />
+        </columns>
+      </TableView>
    </children>
 </AnchorPane>

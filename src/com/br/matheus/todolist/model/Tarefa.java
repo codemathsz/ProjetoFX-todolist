@@ -3,6 +3,8 @@ package com.br.matheus.todolist.model;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import javafx.scene.control.TableView;
+
 public class Tarefa {
 
 	private long id;
@@ -13,6 +15,7 @@ public class Tarefa {
 	private String comentarioTf;
 	private StatusTarefa status;// ENUMERAÇÃO
 	private Importancia classifImportancia;
+	
 	
 	
 	// GETs E SETs
@@ -89,7 +92,11 @@ public class Tarefa {
 		
 		return builder.toString();
 	}
+	
+	
+	
 }
+
 
 
 

@@ -6,11 +6,15 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 
+import com.br.matheus.todolist.model.Importancia;
+import com.br.matheus.todolist.model.StatusTarefa;
 import com.br.matheus.todolist.model.Tarefa;
 
 public class TarefaIO {
@@ -68,16 +72,60 @@ public class TarefaIO {
 		
 	}
 	// CRIANDO O MÉTODO QUE LER AS TAREFAS			"MANDANDO O ERRO PRA CIMA"
-	public static List<Tarefa> readTarefas() throws FileNotFoundException{// List <"TEM QUE SER DE UMA CLASSE, E PARA USAR OS TIPOS PRIMITIVOS TEM QUE CHAMAR A CLASSE QUE FORAM CRIADOS PARA ELES EX: INT= Integer">
+	public static List<Tarefa> readTarefas() throws IOException{// List <"TEM QUE SER DE UMA CLASSE, E PARA USAR OS TIPOS PRIMITIVOS TEM QUE CHAMAR A CLASSE QUE FORAM CRIADOS PARA ELES EX: INT= Integer">
+		// LENDO UM ARQUIVO TEXTO
 		
 		File arqTarefas = new File(FILE_TAREFA);
 		List<Tarefa> tarefas = new ArrayList<>();// É OPCIONAL COLOCAR Array< AQUI!> O <Tarefa>  POR QUE JÁ ESTÁ NO List
 		FileReader reader = new  FileReader(arqTarefas);// FileReader NÃO LÊ UMA LINHA INTEIRA, É LIMITADO
-		BufferedReader buff = new BufferedReader(reader);// O BufferedReader CONSEGUE LER O ARQUIVO
-		return null;
+		BufferedReader buff = new BufferedReader(reader);// O BufferedReader CONSEGUE LER O ARQUIVO MELHOR QUE O FileReader
+		
+		String linha;// CADA UMA DAS LINHAS DO DOC
+		// COLOCAR DENTRO DELA A LINHA QUE FOI LIDA PELO BUFFEREADER linha = buff.readLine();
+		while((linha = buff.readLine()) != null) {
+			// TRANSFORMO A LINHA EM UM VETOR
+			String[] vetor = linha.split(";");// o MÉTODO SPLIT, CRIOU O VETOR DE STRING
+			
+			// TEMOS QUE CRIAR UMA TEREFA
+			Tarefa t = new Tarefa();
+			
+			System.out.println(linha);
+			t.setId(Long.parseLong(vetor[0]));// Long.parseLong, CONVERTENDO O VETOR STRING PARA LONG, POR QUE O Id É DO TIPO long
+			
+			DateTimeFormatter fmt =DateTimeFormatter.ofPattern("dd/MM/yyyy");// fmt FORMATADOR DE DATA PARA STRING
+			
+			t.setDataCriacaoTf(LocalDate.parse(vetor[1], fmt));
+			
+			t.setDataLimiteTf(LocalDate.parse(vetor[2], fmt));
+			
+			if(!vetor[3].isEmpty()) {
+				t.setDataFinalizadaTf(LocalDate.parse(vetor[3], fmt));
+			}
+			
+			
+			t.setDescricaoDaTf(vetor[4]);
+			
+			int indStatus = Integer.parseInt(vetor[5]);
+			t.setStatus(StatusTarefa.values()[indStatus]);
+			
+			t.setClassifImportancia(Importancia.values()[Integer.parseInt(vetor[6])]);
+			
+			t.setComentarioTf(vetor[7]);
+			
+			tarefas.add(t);
+			
+			
+		}
+		
+		buff.close();
+		reader.close();
+		System.out.println(tarefas.size());
+		return tarefas;
+		
+		// FileReader ESTÁ CONECTANDO o BufferedReader AO ARQUIVO, o Buff  é MELHOR QUE o FileReader
 	}
 }
-
+ 
 
 
 
