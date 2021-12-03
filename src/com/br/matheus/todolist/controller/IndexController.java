@@ -23,9 +23,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -41,14 +43,15 @@ public class IndexController implements Initializable, ChangeListener<Tarefa>{
 	private DatePicker dateLimitBox;
 
 	@FXML
-	private TextField boxNameTf, statusTf;
+	private TextField boxNameTf, statusTf, viewCodeField;
 
 	@FXML
 	private TextArea boxComent;
 
 	@FXML
 	private Button btnSave, btnList, btnCalendar, btnClean, btnDump;// Dump = JOGAR FORA
-
+	@FXML
+	private Label labelDate;
 	// VARIÁVEL PARA GUARDAR A TAREFA
 	private Tarefa tarefa;
 	// VARIÁVEL PARA GUARDAR A LISTA DE TAREFAS
@@ -69,7 +72,27 @@ public class IndexController implements Initializable, ChangeListener<Tarefa>{
 	
 	@FXML
 	public void btnCalendarClick() {
-
+		if(tarefa != null) {
+			// PARA NÃO ADIAR SE A TAREFA NÃO ESTIVER SELECIONADA, O BOTÃO JÁ ESTÁ DESHABILITADO, MAIS SÓ POR SEGURANÇA
+			int days = Integer.parseInt(JOptionPane.showInputDialog(null, "Quantos dias você deseja Adiar", "Informe quantos dias", JOptionPane.QUESTION_MESSAGE));
+			LocalDate newDate = tarefa.getDataLimiteTf().plusDays(days);//  CRIANDO UMA NOVA DATA DE CONCLUSÃO
+			
+			//if(newDate.equals(tarefa.getDataLimiteTf())) {}
+			
+			tarefa.setDataLimiteTf(newDate);
+			tarefa.setStatus(StatusTarefa.ADIADA);
+			try {
+				TarefaIO.atualizarTarefas(tarefas);
+				// AVISAR AO USUÁRIO QUE A TAREFA FOI ADIADA COM SUCESSO | E A SUA NOVA DATA LIMITE
+				DateTimeFormatter fmt =DateTimeFormatter.ofPattern("dd/MM/yyyy");
+				JOptionPane.showMessageDialog(null, "Tarefa adiada com sucesso.\n nova data:"+newDate.format(fmt));
+				carregarTarefas();
+				clearCamp();
+			} catch (IOException e) {
+				JOptionPane.showMessageDialog(null,"Ocorreu um erro ao atualizar as tarefas", "Erro", 0);
+				e.printStackTrace();
+			}
+		}
 	}
 
 	@FXML
@@ -77,14 +100,52 @@ public class IndexController implements Initializable, ChangeListener<Tarefa>{
 		clearCamp();
 	}
 
+	
 	@FXML
 	public void btnDumpClick() {
+		
+		if(tarefa != null) {
+			// O JOptionPAne DEVOLVE UM VALOR INTEIRO DO BOTÃO QUE FOI CRIADO
+			int resposta = JOptionPane.showConfirmDialog(null, "Deseja realmente excluir a tarefa "+tarefa.getId()+"?","Confirmar exclusão", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);//  VAI APARECER UMA CAIXINHA PERGUNTANDO SER QUER EXCLUIR
+			if(resposta == 0) {
+				tarefas.remove(tarefa);// REMOVE SÓ FUNCIONA SE O OBJ(TAREFA) FOR IGUAL AO O OUTRO(ID DA TAREFA), DEU CERTO POR QUE É O MSM OBJ, MÉTODO CHANGED
+				
+				try {
+					TarefaIO.atualizarTarefas(tarefas);
+					clearCamp();
+					carregarTarefas();
+				} catch (IOException e) {
+					JOptionPane.showMessageDialog(null, "ocorreu um erro ao excluir a tarefa", "Erro ao excluir", JOptionPane.ERROR_MESSAGE);
+					e.printStackTrace();
+				}
+				
+			}
+			 
 
+		}
 	}
+	
 
 	@FXML
-	public void btnListClick() {
-
+	public void btnListClick() {// MÉTODO CONCLUIR
+		if(tarefa != null) {
+			
+			tarefa.setStatus(StatusTarefa.CONCLUIDA);
+			tarefa.setDataFinalizadaTf(LocalDate.now());
+			
+			DateTimeFormatter fmt =DateTimeFormatter.ofPattern("dd/MM/yyyy");
+			JOptionPane.showMessageDialog(null, "Tarefa concluída!!\n Data de conclusão:"+tarefa.getDataFinalizadaTf().format(fmt));
+			
+			try {
+				TarefaIO.atualizarTarefas(tarefas);
+				// AVISAR AO USUÁRIO QUE A TAREFA FOI ADIADA COM SUCESSO | E A SUA NOVA DATA LIMITE
+				carregarTarefas();
+				clearCamp();
+			} catch (IOException e) {
+				JOptionPane.showMessageDialog(null,"Ocorreu um erro ao concluir a tarefa ", "Erro ao concluir", 0);
+				e.printStackTrace();
+			}
+		}
 	}
 
 	@Override
@@ -123,6 +184,48 @@ public class IndexController implements Initializable, ChangeListener<Tarefa>{
 		
 		});
 		
+		
+		tvTarefa.setRowFactory(call -> new TableRow<Tarefa>() {
+			@Override
+			public void updateItem(Tarefa item, boolean empty) {
+				super.updateItem(item, empty);
+				if(item == null) {
+					setStyle("");
+				}else if(item.getStatus() == StatusTarefa.CONCLUIDA) {
+					setStyle("-fx-background-color:#0f0");
+					
+				}else if(item.getDataLimiteTf().isBefore(LocalDate.now())) {
+					// SE A DATA LIMITE ESTIVER ATRASADA
+					setStyle("-fx-background-color: tomato");
+					
+				}else if(item.getStatus() == StatusTarefa.ADIADA) {
+					
+				}else {
+					setStyle("-fx-background-color: #CFF0CC");
+					
+				}
+			}
+		});
+		
+		//tvTarefa.setRowFactory(new Callback<TableView<Tarefa>, TableRow<Tarefa>>() {
+			//@Override
+			//public TableRow<Tarefa> call(TableView<Tarefa> param) {
+				// TODO Auto-generated method stub
+				//return TableRow<Tarefa>(){
+					//@Override
+					//public void updateIndex(int i) {
+						// TODO Auto-generated method stub
+						//super.updateIndex(i);
+					//}
+				//}
+			//}
+		//})
+		
+		
+		
+		viewCodeField.setDisable(true);
+		
+		
 		//	EVENTO DE SELEÇÃO DE UM ITEM NA TableView
 		tvTarefa.getSelectionModel().selectedItemProperty().addListener(this);
 		
@@ -158,6 +261,7 @@ public class IndexController implements Initializable, ChangeListener<Tarefa>{
 			boxNameTf.setPromptText("Informe o nome da Tarefa*");
 			//JOptionPane.showMessageDialog(null, "Informe a descrição da tarefa", "Campo da Descrição da Tarefa Vazio",0);
 			//boxNameTf.requestFocus();// FICAR SELECIONADO DEPOIS DA MSG
+			
 
 		} else if (boxComent.getText().isEmpty()) {
 			boxComent.setStyle("-fx-background-color:red");
@@ -165,10 +269,13 @@ public class IndexController implements Initializable, ChangeListener<Tarefa>{
 			//JOptionPane.showMessageDialog(null, "Informe os comentários da tarefa", "campo de comentários vazio", 0);
 			//boxComent.requestFocus();// FICAR SELECIONADO DEPOIS DA MSG
 
-		} else if (boxNameTf.getLength() <= 5) {
+		} else if (boxNameTf.getLength() <= 3) {
+			
 			// VERIFICANDO SE O TAMANHO DO NOME DA TAREFA É VALIDO
 			JOptionPane.showMessageDialog(null, "Nome da Tarefa muito curto, min(5 caracteres)",
 					"Nome da Terefa inválido", 0);
+			
+			
 			boxNameTf.requestFocus();// FICAR SELECIONADO DEPOIS DA MSG
 
 		} else if (choiceImportancia.getValue() == null) {
@@ -182,20 +289,32 @@ public class IndexController implements Initializable, ChangeListener<Tarefa>{
 				JOptionPane.showMessageDialog(null, "Data Limite inválida", "Data inválida", 0);
 				dateLimitBox.requestFocus();// FICAR SELECIONADO DEPOIS DA MSG
 			} else {
-				// INSTACIANDO A TAREFA
-				tarefa = new Tarefa();
+				
+				// VERIFICA SE É UMA TAREFA NOVA OU JÁ EXSTENTE, SE FOR EXISTENTE VAI APENAS RESCREVER A TAREFA E NÃO CRIAR UMA NOVA 
+				if(tarefa == null) {
+					// INSTACIANDO A TAREFA
+					tarefa = new Tarefa();
+					tarefa.setDataCriacaoTf(LocalDate.now());
+					tarefa.setStatus(StatusTarefa.ABERTA);// CLASSIFICANDO O STATUS DA TAREFA COMO ABERTA
+				}
+				
+				
 				// POPULAR TAREFA
-				tarefa.setDataCriacaoTf(LocalDate.now());
-				tarefa.setStatus(StatusTarefa.ABERTA);// CLASSIFICANDO O STATUS DA TAREFA COMO ABERTA
 				tarefa.setDataLimiteTf(dateLimitBox.getValue());
 				tarefa.setDescricaoDaTf(boxNameTf.getText());
 				tarefa.setComentarioTf(boxComent.getText());
 				tarefa.setClassifImportancia(choiceImportancia.getValue());
 				// SALVAR NO BANCO DE DADOS
+				
+				
 				try {// NÃO TRATAMOS NA CLASSE TAREFAIO, USAMOS O THROWS, ENTÃO ESTAMOS TRATANDO AQUI
-
-					TarefaIO.insert(tarefa);
-					// LIMPAR OS CAMPOS DO FORMULÁRIO
+					// DECIDE ENTRE INSERIR OU ATUALIZAR A TAREFA
+					if(tarefa.getId() == 0) {// UMA TAREFA NOVA AINDA NÃO TEM O SEU ID NO BANCO DE DADOS ENTÃO PASSAMOS COMO PARÂMNETRO O ID
+						TarefaIO.insert(tarefa);
+					}else {
+						TarefaIO.atualizarTarefas(tarefas);
+					}
+					carregarTarefas();
 					clearCamp();
 				} catch (FileNotFoundException e) {
 					
@@ -213,16 +332,38 @@ public class IndexController implements Initializable, ChangeListener<Tarefa>{
 	}
 
 	private void clearCamp() {
+		// CAIXAS DE 'TEXTO'
 		tarefa = null;// 'MATANDO' O OBJ TAREFA PARA A PROXIMA TAREFA
-		boxNameTf.setText(null);
+		boxNameTf.clear();
 		dateLimitBox.setValue(null);
-		statusTf.setText(null);
-		boxComent.setText(null);
+		statusTf.clear();
+		boxComent.clear();
 		choiceImportancia.setValue(null);// LIMPANDO O "VALOR"
+		// ESTAVA LIMPANDO OS IDs NO BANCO DE DADOS, E DANDO ERRO QUANDO INSERIA UMA NOVA TAREFA
+		viewCodeField.clear();
+		
+		
+		// BOTÕES
 		btnList.setDisable(true);
 		btnCalendar.setDisable(true);
-		btnDump.setDisable(true);
+		btnDump.setDisable(false);
+		
+		// DESHABILITANDO CAIXAS DE 'TEXTOS' E BOTÕES
 		dateLimitBox.setDisable(false);
+		boxNameTf.setEditable(true);
+		boxComent.setEditable(true);
+		choiceImportancia.setDisable(false);
+		btnSave.setDisable(false);
+		// TIRANDO A BORDA E TEXTPROMPT DAS CAIXAS
+		boxNameTf.setStyle("-fx-border-color: none");
+		boxNameTf.setPromptText("");
+		dateLimitBox.setStyle("-fx-background-color:none");
+		dateLimitBox.setPromptText("");
+		boxComent.setStyle("-fx-background-color:none");
+		boxComent.setPromptText("");
+		
+		
+		labelDate.setText("Data de conclusão:");
 		tvTarefa.getSelectionModel().clearSelection();
 		dateLimitBox.requestFocus();// FICAR SELECIONADO DEPOIS DA MSG
 	}
@@ -248,6 +389,37 @@ public class IndexController implements Initializable, ChangeListener<Tarefa>{
 			btnList.setDisable(false);
 			btnCalendar.setDisable(false);
 			btnDump.setDisable(false);
+			
+			//  MOSTRANDO O CÓDIGO NA TABELA
+			viewCodeField.setText(tarefa.getId()+"");
+			viewCodeField.setDisable(true);
+			viewCodeField.setOpacity(.8);
+			
+			if(tarefa.getStatus() == StatusTarefa.CONCLUIDA) {
+				boxNameTf.setEditable(false);
+				choiceImportancia.setDisable(true);
+				choiceImportancia.setOpacity(.8);
+				
+				btnSave.setDisable(true);
+				boxComent.setEditable(false);
+				btnList.setDisable(true);
+				btnCalendar.setDisable(true);
+				btnCalendar.setOpacity(.8);
+				
+				labelDate.setText("Data de conclusão:");
+				dateLimitBox.setValue(tarefa.getDataFinalizadaTf());
+			}else {
+				boxNameTf.setEditable(true);
+				choiceImportancia.setDisable(false);
+				btnSave.setDisable(false);
+				boxComent.setEditable(true);
+				btnList.setDisable(false);
+				btnCalendar.setDisable(false);
+				
+				labelDate.setText("Data para a realização:");
+				dateLimitBox.setValue(tarefa.getDataCriacaoTf());
+			}
+
 			
 		}
 		

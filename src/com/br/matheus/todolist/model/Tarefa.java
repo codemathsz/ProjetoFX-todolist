@@ -2,10 +2,11 @@ package com.br.matheus.todolist.model;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 
 import javafx.scene.control.TableView;
 
-public class Tarefa {
+public class Tarefa implements Comparable<Tarefa>{// IMPLEMENTANDO POR CAUSA DO,Collections.sort(tarefas); QUE É PARA COMPARAR
 
 	private long id;
 	private LocalDate dataCriacaoTf;// DATA DE CRIAÇÃO DA TAREFA
@@ -91,6 +92,19 @@ public class Tarefa {
 		builder.append(this.getComentarioTf()+"\n");//\n PARA A PRÓXIMA TAREFA COMEÇAR NA LINHA DE BAIXO
 		
 		return builder.toString();
+	}
+	
+	
+	@Override
+	public int compareTo(Tarefa o) {
+		// NEGATIVO QUANDO FOR MENOR QUE UM OBJETO E QUANDO MAIOR RETORNA POSITIVO
+		
+		if(this.getDataLimiteTf().isBefore(o.getDataLimiteTf())) {// isBefore, ANTES, QUE DIZER QUE this.getDataLimiteTf() VEM ANTES DO o.getDataLimiteTf(, SENDO ASSIM É MENOR  
+			return -1;
+		}else if(this.getDataLimiteTf().isAfter(o.getDataLimiteTf())) {// isAfter, DEPOIS, QUE DIZER QUE this.getDataLimiteTf() ESTÁ 'DEPOIS' DO o.getDataLimiteTf(, SENDO ASSIM É MAIOR
+			return 1;
+		}
+		return this.getDescricaoDaTf().compareTo(o.getDescricaoDaTf());// SE AS DUAS FOREM IGUAL ELE VAI ORDENAR PELA DESCRIÇÃO NA ORDEM ALFABETICA
 	}
 	
 	

@@ -12,10 +12,12 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
 <AnchorPane prefHeight="550.0" prefWidth="943.0" style="-fx-background-radius: 20px; -fx-background-color: #079;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.br.matheus.todolist.controller.IndexController">
    <children>
@@ -38,11 +40,11 @@
           </Menu>
         </menus>
       </MenuBar>
-      <Label layoutX="14.0" layoutY="48.0" prefHeight="50.0" prefWidth="174.0" text="Data para a realização:" textFill="WHITE" AnchorPane.bottomAnchor="452.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="301.0" AnchorPane.topAnchor="48.0">
+      <Label fx:id="labelDate" layoutX="190.0" layoutY="56.0" prefHeight="25.0" prefWidth="174.0" text="Data para a realização:" textFill="WHITE" AnchorPane.bottomAnchor="469.0" AnchorPane.leftAnchor="190.0" AnchorPane.rightAnchor="579.0" AnchorPane.topAnchor="56.0">
          <font>
             <Font name="Sitka Text Bold" size="15.0" />
          </font></Label>
-      <DatePicker fx:id="dateLimitBox" layoutX="15.0" layoutY="85.0" />
+      <DatePicker fx:id="dateLimitBox" layoutX="190.0" layoutY="86.0" />
       <Label layoutX="19.0" layoutY="143.0" prefHeight="18.0" prefWidth="69.0" text="Tarefa:" textFill="WHITE" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="406.0" AnchorPane.topAnchor="143.0">
          <font>
             <Font name="Sitka Text Bold" size="15.0" />
@@ -72,6 +74,9 @@
                </cursor>
             </ImageView>
          </graphic>
+         <tooltip>
+            <Tooltip text="Salvar" />
+         </tooltip>
       </Button>
       <Button fx:id="btnList" disable="true" layoutX="90.0" layoutY="483.0" mnemonicParsing="false" onAction="#btnListClick" prefHeight="50.0" prefWidth="69.0" style="-fx-background-radius: 18px; -fx-background-color: #0388a6;">
          <cursor>
@@ -87,6 +92,9 @@
                </cursor>
             </ImageView>
          </graphic>
+         <tooltip>
+            <Tooltip text="Concluir" />
+         </tooltip>
       </Button>
       <Button fx:id="btnCalendar" disable="true" layoutX="164.0" layoutY="483.0" mnemonicParsing="false" onAction="#btnCalendarClick" prefHeight="50.0" prefWidth="69.0" style="-fx-background-radius: 18px; -fx-background-color: #0388a6;">
          <cursor>
@@ -102,6 +110,9 @@
                </cursor>
             </ImageView>
          </graphic>
+         <tooltip>
+            <Tooltip text="Adiar" />
+         </tooltip>
       </Button>
       <Button fx:id="btnClean" layoutX="335.0" layoutY="483.0" mnemonicParsing="false" onAction="#btnCleanClick" prefHeight="50.0" prefWidth="69.0" style="-fx-background-radius: 18px; -fx-background-color: #0388a6;">
          <cursor>
@@ -117,6 +128,9 @@
                </cursor>
             </ImageView>
          </graphic>
+         <tooltip>
+            <Tooltip text="Limpar" />
+         </tooltip>
       </Button>
       <Button fx:id="btnDump" disable="true" layoutX="242.0" layoutY="483.0" mnemonicParsing="false" onAction="#btnDumpClick" prefHeight="50.0" prefWidth="69.0" style="-fx-background-radius: 18px; -fx-background-color: #0388a6;">
          <cursor>
@@ -132,6 +146,9 @@
                </cursor>
             </ImageView>
          </graphic>
+         <tooltip>
+            <Tooltip text="Apagar Tarefa" />
+         </tooltip>
       </Button>
       <ChoiceBox fx:id="choiceImportancia" layoutX="189.0" layoutY="179.0" prefWidth="150.0" />
       <Label layoutX="191.0" layoutY="144.0" text="Nível de Importância:" textFill="WHITE">
@@ -147,5 +164,11 @@
             <TableColumn fx:id="tcImportancia" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" text="Importância" />
         </columns>
       </TableView>
+      <TextField fx:id="viewCodeField" editable="false" layoutX="15.0" layoutY="87.0" prefHeight="25.0" prefWidth="69.0" />
+      <Text fill="WHITE" layoutX="14.0" layoutY="72.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Código">
+         <font>
+            <Font name="Sitka Text Bold" size="15.0" />
+         </font>
+      </Text>
    </children>
 </AnchorPane>

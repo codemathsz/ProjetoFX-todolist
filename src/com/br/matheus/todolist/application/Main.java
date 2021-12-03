@@ -1,10 +1,13 @@
 package com.br.matheus.todolist.application;
 	
+
 import com.br.matheus.todolist.io.TarefaIO;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.fxml.FXMLLoader;
 
@@ -20,6 +23,8 @@ public class Main extends Application {
 			primaryStage.setScene(scene);
 			primaryStage.setResizable(false);//IMPEDIR QUE A JANELA  REDIMENCIONE
 			primaryStage.setTitle("To do List");//TITULO DA JANELA
+			primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("../images/IconList.png")));
+			//primaryStage.initStyle(StageStyle.UNDECORATED); TIRAR A BORDA DA JANELA QUE É PADRÃO DO WINDOWNS
 			primaryStage.show();
 			TarefaIO.readTarefas();
 		} catch(Exception e) {
