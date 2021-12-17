@@ -1,5 +1,7 @@
 package com.br.matheus.todolist.controller;
 
+import java.awt.Desktop;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
@@ -8,7 +10,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.br.matheus.todolist.io.TarefaIO;
 import com.br.matheus.todolist.model.Importancia;
@@ -19,12 +24,15 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
@@ -32,7 +40,11 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.util.Callback;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+
 
 public class IndexController implements Initializable, ChangeListener<Tarefa>{
 
@@ -47,7 +59,18 @@ public class IndexController implements Initializable, ChangeListener<Tarefa>{
 
 	@FXML
 	private TextArea boxComent;
-
+	
+	
+	// EXPORTS
+	@FXML
+	private MenuItem exportConcluida;
+	@FXML
+	private MenuItem exportAdiada;
+	@FXML 
+	private MenuItem exportAberta;
+	
+	
+	
 	@FXML
 	private Button btnSave, btnList, btnCalendar, btnClean, btnDump;// Dump = JOGAR FORA
 	@FXML
@@ -57,6 +80,12 @@ public class IndexController implements Initializable, ChangeListener<Tarefa>{
 	// VARIÁVEL PARA GUARDAR A LISTA DE TAREFAS
 	private List<Tarefa> tarefas;
 	
+	@FXML
+	private MenuItem menuItemExportar;
+	@FXML
+	private MenuItem menuItemSair;
+	@FXML
+	private MenuItem menuItemAbout;
 	@FXML
 	private ChoiceBox<Importancia> choiceImportancia;
 	@FXML
@@ -69,6 +98,8 @@ public class IndexController implements Initializable, ChangeListener<Tarefa>{
 	private TableColumn<Tarefa, StatusTarefa> tcStatus;
 	@FXML
 	private TableColumn<Tarefa, Importancia> tcImportancia;
+	
+	
 	
 	@FXML
 	public void btnCalendarClick() {
@@ -424,4 +455,133 @@ public class IndexController implements Initializable, ChangeListener<Tarefa>{
 		}
 		
 	}
+	// MÉTODO QUE CRIA UM ARRAY DE TAREFA, E DEPOIS ELE REMOVE UM STATUS DE UMA TAREFA QUE SERÁ PASSADA QUANDO CHAMAR ELE
+	private List<Tarefa> filtrar(StatusTarefa status){
+		List<Tarefa> tarefasFiltradas = null;
+		try {
+			
+			tarefasFiltradas = TarefaIO.readTarefas();
+			tarefasFiltradas.removeIf(tarefa -> tarefa.getStatus() != status);
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return tarefasFiltradas;	
+		
+		
+	}
+	
+	// MÉTODOS EXPORT
+	@FXML
+	public void exportConcluidaClick() {
+		
+		
+			// CRIAR O TIPO DO ARQUIVO QUE NO CASO É HTML
+			FileFilter filter = new FileNameExtensionFilter("Arquivos HTML", "html");
+			
+			//JFileChooser, CAIXINHA PARA SELECIONAR UM ARQUIVO
+			JFileChooser chooser = new JFileChooser();
+			chooser.setFileFilter(filter);
+			chooser.showSaveDialog(null);//showSaveDialog, PARA APARECER TANTO NO MODO OPEN OU SAVE( ABRIR UM ARQUIVO OU SALVAR), null PARA ABRIR NO MEIO DA TELA
+			// VERIFICANDO SE AO ABRIR UM ARUIVO FOI ESCOLHIDO
+			if(chooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+				File arqSelecionado = chooser.getSelectedFile();
+				arqSelecionado = new File(arqSelecionado+".html");
+				try {
+									
+					
+					TarefaIO.exportHtml(filtrar(StatusTarefa.CONCLUIDA), arqSelecionado);
+					
+					// TENTATIVAS
+					//Desktop desktop = Desktop.getDesktop(); ABRI O AQUIVO, SE O ARQUIVO ESTIVER COMO PADRÃO PARA NÃO ABRIR NO CHROME ELE ABRE EM OUTRA COISA E COMO QUERIAMOS ABRIR NO CHROME COLOCAMOS O ÚLTIMO
+					//desktop.open(arqSelecionado);
+					//Runtime.getRuntime().exec("notepad "+arqSelecionado.getAbsolutePath());
+					//Runtime.getRuntime().exec("start chrome "+arqSelecionado.getAbsolutePath()); 
+					Runtime.getRuntime().exec("cmd /c start chrome "+arqSelecionado.getAbsolutePath());
+					JOptionPane.showConfirmDialog(null, "Deseja Abrir o Arquivo? ", "Abrir", JOptionPane.YES_NO_CANCEL_OPTION);
+				} catch (IOException e) {
+					JOptionPane.showMessageDialog(null,"Erro ao exportar o arquivo","Erro", 0);
+					e.printStackTrace();
+				}
+			}
+		
+	}
+	@FXML
+	public void exportAdiadaClick() {
+		// CRIAR O TIPO DO ARQUIVO QUE NO CASO É HTML
+					FileFilter filter = new FileNameExtensionFilter("Arquivos HTML", "html");
+					
+					//JFileChooser, CAIXINHA PARA SELECIONAR UM ARQUIVO
+					JFileChooser chooser = new JFileChooser();
+					chooser.setFileFilter(filter);
+					chooser.showSaveDialog(null);//showSaveDialog, PARA APARECER TANTO NO MODO OPEN OU SAVE( ABRIR UM ARQUIVO OU SALVAR), null PARA ABRIR NO MEIO DA TELA
+					// VERIFICANDO SE AO ABRIR UM ARUIVO FOI ESCOLHIDO
+					if(chooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+						File arqSelecionado = chooser.getSelectedFile();
+						arqSelecionado = new File(arqSelecionado+".html");
+						try {
+											
+							
+							TarefaIO.exportHtml(filtrar(StatusTarefa.ADIADA), arqSelecionado);
+						} catch (IOException e) {
+							JOptionPane.showMessageDialog(null,"Erro ao exportar o arquivo","Erro", 0);
+							e.printStackTrace();
+						}
+					}
+	}
+	@FXML
+	public void exportAbertaClick() {
+		// CRIAR O TIPO DO ARQUIVO QUE NO CASO É HTML
+		FileFilter filter = new FileNameExtensionFilter("Arquivos HTML", "html");
+		
+		//JFileChooser, CAIXINHA PARA SELECIONAR UM ARQUIVO
+		JFileChooser chooser = new JFileChooser();
+		chooser.setFileFilter(filter);
+		chooser.showSaveDialog(null);//showSaveDialog, PARA APARECER TANTO NO MODO OPEN OU SAVE( ABRIR UM ARQUIVO OU SALVAR), null PARA ABRIR NO MEIO DA TELA
+		// VERIFICANDO SE AO ABRIR UM ARUIVO FOI ESCOLHIDO
+		if(chooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+			File arqSelecionado = chooser.getSelectedFile();
+			arqSelecionado = new File(arqSelecionado+".html");
+			try {
+								
+				
+				TarefaIO.exportHtml(filtrar(StatusTarefa.ABERTA), arqSelecionado);
+			} catch (IOException e) {
+				JOptionPane.showMessageDialog(null,"Erro ao exportar o arquivo","Erro", 0);
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	
+	
+	@FXML
+	public void menuItemSairClick() {
+		
+	}
+	@FXML
+	public void menuItemAboutClick() {
+		try {
+			AnchorPane root = (AnchorPane)FXMLLoader.load(getClass().getResource("/com/br/matheus/todolist/view/About.fxml"));
+			Scene scene = new Scene(root, 400,500);
+			
+			Stage stage = new Stage();
+			stage.setScene(scene);
+			stage.setTitle("About ToDoList");//TITULO
+			stage.setResizable(false);//IMPEDIR QUE A JANELA  REDIMENCIONE
+			stage.initStyle(StageStyle.UNDECORATED);//TITANDO A BORDA DA JANELA
+			stage.initModality(Modality.APPLICATION_MODAL);// MODAL, É AS JANELAS QUE ABREM E SE VOCÊ NÃO CLICAR(FECHAR) NELA VOCÊ NÃO CONSEGUE CLICAR NO QUE ESTÁ ATRÁS DESTA JANELA, "ELA ROUBA A ATENÇÃO PRA ELA"
+			stage.showAndWait();// ESPERAR, DEPOIS DE FECHAR A JANELA O CÓDIGO QUE ESTIVER DEPOIS DESSA LINHA SERÁ EXECUTADO, SE ESTIVER ABERTA NÃO SERÁ EXECUTADO
+		} catch (IOException e) {
+			
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
+	
+	
+	
 }

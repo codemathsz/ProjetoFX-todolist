@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.br.matheus.todolist.controller.AboutController">
+   <children>
+      <ImageView pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/fundoAbout2_400X500.png" />
+         </image>
+      </ImageView>
+      <TextArea editable="false" layoutX="12.0" layoutY="112.0" prefHeight="277.0" prefWidth="376.0" style="-fx-border-color: #fff; -fx-border-radius: 8px;" text="ToDoList é um projeto desenvolvido por Matheus Oliveira&#10;de Paula, um projeto pensado e orientado por &#10;José Roberto Chile, professor do SENAI &quot;Ricardo Lerner&quot;&#10;&#10;O projeto inicial era ser apenas uma lista de tarefas &#10;comum mais depois de algumas atualizações feita &#10;por mim, é uma de tarefas que contém um login, &#10;assim a pessoas ela acessa apenas a lista que ela criou &#10;naquele login, é dividiva em tipo de lista, Diária, &#10;Trabalhos, etc. Ainda tem outras atulizaçõesque estão &#10;sendo desenvolvidas" AnchorPane.bottomAnchor="111.0" AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="112.0">
+         <font>
+            <Font name="System Italic" size="14.0" />
+         </font></TextArea>
+      <ImageView fitHeight="49.0" fitWidth="60.0" layoutX="337.0" layoutY="57.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/foto.png" />
+         </image></ImageView>
+      <Button fx:id="btnOk" layoutX="143.0" layoutY="399.0" mnemonicParsing="false" onAction="#btnOkClick" prefHeight="39.0" prefWidth="115.0" style="-fx-border-radius: 15px; -fx-background-radius: 15px; -fx-background-color: #000; -fx-border-color: purple; -fx-border-color: #fff;" text="OK" textAlignment="CENTER" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Button>
+      <Label layoutX="27.0" layoutY="53.0" text="Sobre">
+         <font>
+            <Font name="System Bold" size="36.0" />
+         </font>
+         <textFill>
+            <LinearGradient endX="1.0" endY="1.0">
+               <stops>
+                  <Stop color="#0062ff" />
+                  <Stop color="#0062ff" offset="0.15463917525773196" />
+                  <Stop color="#0062ff" offset="0.18090611051862376" />
+                  <Stop color="#0062ff" offset="0.2577319587628866" />
+                  <Stop color="#7b2ef0" offset="0.5076825848244263" />
+                  <Stop color="#0062ff" offset="0.5211912943871707" />
+                  <Stop color="#7b2ef0" offset="0.7216494845360825" />
+                  <Stop color="#772ded" offset="0.7560137457044673" />
+                  <Stop color="#772ded" offset="0.7938144329896908" />
+                  <Stop color="#0062ff" offset="0.8141169964845754" />
+                  <Stop color="#7b2ef0" offset="0.9682821819330883" />
+                  <Stop color="WHITE" offset="1.0" />
+               </stops>
+            </LinearGradient>
+         </textFill>
+      </Label>
+      
+   </children>
+</AnchorPane>
